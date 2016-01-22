@@ -212,7 +212,7 @@ float USimplexNoiseBPLibrary::SimplexNoise2D(float x, float y)
 
 
 // 3D Simplex Noise
-float USimplexNoiseBPLibrary::SimplexNoise3D(float x, float y, float z)
+float USimplexNoiseBPLibrary::SimplexNoise3D(float x, float y, float z, FVector& gradient)
 {
 
 	// Simple skewing factors for the 3D case
@@ -306,7 +306,16 @@ float USimplexNoiseBPLibrary::SimplexNoise3D(float x, float y, float z)
 		t3 *= t3;
 		n3 = t3 * t3 * grad(perm[ii + 1 + perm[jj + 1 + perm[kk + 1]]], x3, y3, z3);
 	}
+	
+	FVector4 m = FVector4(t0, t1, t2, t3);
+	FVector4 m2 = m * m;
+	FVector4 m4 = m2 * m2;
 
+	FVector4 temp = FVector4(n0 / t0, n1 / t1, n2 / t2, n3 / t3);
+	gradient = FVector(1, 1, 1) * (-8.0 * (temp.X * x0 + temp.Y * x1 + temp.Z * x2 + temp.W * x3));
+	gradient += FVector(1, 1, 1) * (m4.X * x0 + m4.Y * x1 + m4.Z * x2 + m4.W * x3);
+	gradient *= 32.0;
+	
 	// Add contributions from each corner to get the final noise value.
 	// The result is scaled to stay just inside [-1,1]
 	return 32.0f * (n0 + n1 + n2 + n3); // TODO: The scale factor is preliminary!
@@ -465,7 +474,8 @@ float USimplexNoiseBPLibrary::SimplexNoiseScaled2D(float x, float y, float s)
 
 float USimplexNoiseBPLibrary::SimplexNoiseScaled3D(float x, float y, float z, float s)
 {
-	return SimplexNoise3D(x, y, z)*s;
+	FVector g;
+	return SimplexNoise3D(x, y, z, g)*s;
 }
 
 

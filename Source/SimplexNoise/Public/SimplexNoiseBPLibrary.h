@@ -45,7 +45,7 @@ public:
 		static float SimplexNoise2D(float x, float y);
 
 	UFUNCTION(BlueprintCallable, Category = "SimplexNoise")
-		static float SimplexNoise3D(float x, float y, float z);
+		static float SimplexNoise3D(float x, float y, float z, FVector& gradient);
 
 	UFUNCTION(BlueprintCallable, Category = "SimplexNoise")
 		static float SimplexNoise4D(float x, float y, float z, float w);
