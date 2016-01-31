@@ -47,4 +47,6 @@ Temporary Items
 .apdisk
 
 Intermediate/
-Binaries/
+/Binaries/**/UE4Editor-*-*.dll
+*.lib
+*.pdb
